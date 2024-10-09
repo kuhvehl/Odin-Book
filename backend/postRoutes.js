@@ -45,6 +45,46 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/feed", authenticateToken, async (req, res) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.userId },
+      include: {
+        following: {
+          select: { id: true },
+        },
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const followingIds = user.following.map((followedUser) => followedUser.id);
+    followingIds.push(user.id); // Include user's own posts
+
+    const posts = await prisma.post.findMany({
+      where: {
+        authorId: {
+          in: followingIds,
+        },
+      },
+      include: {
+        author: {
+          select: { id: true, name: true, avatarUrl: true },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching personalized feed" });
+  }
+});
+
 // Get a specific post
 router.get("/:postId", authenticateToken, async (req, res) => {
   try {
