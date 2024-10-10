@@ -4,6 +4,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home"; // Import the new Home component
 import Profile from "./pages/Profile"; // Import the new Profile component
+import SearchResults from "./pages/SearchResults"; // Import the new SearchResults component
 import { AuthProvider } from "./context/AuthContext";
 
 // Placeholder components
@@ -18,6 +19,7 @@ function App() {
             <Route path="/profile/:userId" element={<Profile />} />{" "}
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/search" element={<SearchResults />} />{" "}
           </Routes>
         </Layout>
       </Router>

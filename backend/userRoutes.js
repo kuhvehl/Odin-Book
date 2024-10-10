@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const authenticateToken = require("./authMiddleware");
 const { PrismaClient } = require("@prisma/client");
 
 const router = express.Router();
@@ -53,6 +54,36 @@ router.post("/login", async (req, res) => {
     res.json({ message: "Login successful", token });
   } catch (error) {
     res.status(500).json({ error: "Error logging in" });
+  }
+});
+
+// Search users by name
+router.get("/search", authenticateToken, async (req, res) => {
+  const { q } = req.query;
+
+  if (!q) {
+    return res.status(400).json({ error: "Query parameter is required." });
+  }
+
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        name: {
+          contains: q,
+          mode: "insensitive", // Makes the search case insensitive
+        },
+      },
+      select: {
+        id: true,
+        name: true,
+        avatarUrl: true, // Assuming you have this field in your User model
+      },
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
   }
 });
 

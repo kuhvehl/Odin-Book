@@ -1,6 +1,7 @@
 // src/components/Header.jsx
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import SearchBar from "./SearchBar"; // Import the new SearchBar component
 
 const Header = () => {
   const { isAuthenticated, userId, signOut } = useAuth();
@@ -19,6 +20,9 @@ const Header = () => {
               </li>
               <li>
                 <button onClick={signOut}>Sign Out</button>
+              </li>
+              <li>
+                <SearchBar />
               </li>
             </>
           ) : (
