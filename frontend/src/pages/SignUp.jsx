@@ -1,4 +1,3 @@
-// src/pages/SignUp.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -26,6 +25,7 @@ const SignUp = () => {
       signUp(response.data.token);
       navigate("/");
     } catch (err) {
+      console.error(err);
       setError(
         err.response?.data?.message || "An error occurred during sign up"
       );

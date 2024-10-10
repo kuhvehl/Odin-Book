@@ -52,9 +52,13 @@ const Home = () => {
     <div>
       <h1>Your Feed</h1>
       <CreatePost onPostCreated={handlePostCreated} />
-      {posts.map((post) => (
-        <Post key={post.id} post={post} onUpdate={fetchPosts} />
-      ))}
+      {posts.length === 0 ? (
+        <p>No posts to show. Try following some users!</p>
+      ) : (
+        posts.map((post) => (
+          <Post key={post.id} post={post} onUpdate={fetchPosts} />
+        ))
+      )}
     </div>
   );
 };

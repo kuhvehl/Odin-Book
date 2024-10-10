@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import { createContext, useState, useContext, useEffect } from "react";
 
 const AuthContext = createContext(null);
@@ -11,18 +10,47 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      const parsedToken = JSON.parse(atob(token.split(".")[1])); // Assuming JWT is used
-      setUserId(parsedToken.userId); // Assuming the token contains the userId
-      setIsAuthenticated(true);
+      try {
+        const parts = token.split(".");
+        if (parts.length !== 3) {
+          throw new Error("Invalid token format");
+        }
+        const payload = JSON.parse(atob(parts[1]));
+        setUserId(payload.userId);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error("Error parsing token:", error);
+        // Invalid token, clear it
+        localStorage.removeItem("token");
+      }
     }
   }, []);
 
-  const signIn = (token) => {
-    localStorage.setItem("token", token);
-    const parsedToken = JSON.parse(atob(token.split(".")[1]));
-    setUserId(parsedToken.userId);
-    setIsAuthenticated(true);
+  const parseToken = (token) => {
+    try {
+      const parts = token.split(".");
+      if (parts.length !== 3) {
+        throw new Error("Invalid token format");
+      }
+      return JSON.parse(atob(parts[1]));
+    } catch (error) {
+      console.error("Error parsing token:", error);
+      return null;
+    }
   };
+
+  const signIn = (token) => {
+    if (token) {
+      localStorage.setItem("token", token);
+      const parsedToken = parseToken(token);
+      if (parsedToken) {
+        setUserId(parsedToken.userId);
+        setIsAuthenticated(true);
+      }
+    }
+  };
+
+  const signUp = signIn; // signUp function is the same as signIn
 
   const signOut = () => {
     localStorage.removeItem("token");
@@ -31,7 +59,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, userId, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ isAuthenticated, userId, signIn, signUp, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

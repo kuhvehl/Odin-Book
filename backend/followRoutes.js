@@ -105,4 +105,26 @@ router.get("/:userId/following", authenticateToken, async (req, res) => {
   }
 });
 
+// Get follow status of a user
+router.get("/:userId/follow-status", authenticateToken, async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId);
+
+    const isFollowing = await prisma.user.findFirst({
+      where: {
+        id: req.user.userId,
+        following: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+    });
+
+    res.json({ isFollowing: !!isFollowing });
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching follow status" });
+  }
+});
+
 module.exports = router;

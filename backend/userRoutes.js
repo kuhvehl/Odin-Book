@@ -12,11 +12,12 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 router.post("/register", async (req, res) => {
   try {
     const { email, password, username } = req.body;
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        email,
+        email: email,
         password: hashedPassword,
         name: username,
       },
