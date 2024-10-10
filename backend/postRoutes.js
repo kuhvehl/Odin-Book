@@ -140,6 +140,54 @@ router.get("/", authenticateToken, async (req, res) => {
   }
 });
 
+router.get("/user/:userId", authenticateToken, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const userPosts = await prisma.post.findMany({
+      where: { authorId: parseInt(userId) },
+      include: {
+        author: {
+          select: { id: true, name: true, avatarUrl: true },
+        },
+        likes: {
+          select: { userId: true },
+        },
+        comments: {
+          include: {
+            user: {
+              select: { id: true, name: true, avatarUrl: true },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 3, // Limit to the 3 most recent comments
+        },
+        _count: {
+          select: { likes: true, comments: true },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    const postsWithLikeAndCommentInfo = userPosts.map((post) => ({
+      ...post,
+      likeCount: post._count.likes,
+      commentCount: post._count.comments,
+      isLiked: post.likes.some((like) => like.userId === req.user.userId),
+      likes: undefined,
+      _count: undefined,
+    }));
+
+    res.json(postsWithLikeAndCommentInfo);
+  } catch (error) {
+    res.status(500).json({ error: "Error fetching user posts" });
+  }
+});
+
 router.get("/feed", authenticateToken, async (req, res) => {
   try {
     const user = await prisma.user.findUnique({

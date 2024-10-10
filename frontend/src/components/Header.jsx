@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
-  const { isAuthenticated, signOut } = useAuth();
+  const { isAuthenticated, userId, signOut } = useAuth();
 
   return (
     <header>
@@ -15,7 +15,7 @@ const Header = () => {
           {isAuthenticated ? (
             <>
               <li>
-                <Link to="/profile">Profile</Link>
+                <Link to={`/profile/${userId}`}>Profile</Link>
               </li>
               <li>
                 <button onClick={signOut}>Sign Out</button>

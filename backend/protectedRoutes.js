@@ -59,6 +59,7 @@ router.get("/profile/:userId", authenticateToken, async (req, res) => {
       select: {
         id: true,
         name: true,
+        email: true,
         bio: true,
         location: true,
         avatarUrl: true,

@@ -3,10 +3,10 @@ import Layout from "./components/Layout";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Home from "./pages/Home"; // Import the new Home component
+import Profile from "./pages/Profile"; // Import the new Profile component
 import { AuthProvider } from "./context/AuthContext";
 
 // Placeholder components
-const Profile = () => <h1>Profile</h1>;
 
 function App() {
   return (
@@ -15,8 +15,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />{" "}
-            {/* Use the Home component here */}
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:userId" element={<Profile />} />{" "}
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
           </Routes>
