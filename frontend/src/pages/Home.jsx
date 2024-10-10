@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import CreatePost from "../components/CreatePost";
+import Post from "../components/Post";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -52,12 +53,7 @@ const Home = () => {
       <h1>Your Feed</h1>
       <CreatePost onPostCreated={handlePostCreated} />
       {posts.map((post) => (
-        <div key={post.id}>
-          <h3>{post.author.username}</h3>
-          <p>{post.content}</p>
-          <p>Likes: {post.likeCount}</p>
-          <p>Comments: {post.commentCount}</p>
-        </div>
+        <Post key={post.id} post={post} onUpdate={fetchPosts} />
       ))}
     </div>
   );

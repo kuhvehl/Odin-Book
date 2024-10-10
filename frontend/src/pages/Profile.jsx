@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import CreatePost from "../components/CreatePost";
+import Post from "../components/Post";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -66,11 +67,7 @@ const Profile = () => {
       <h2>Posts</h2>
       {user.id === userId && <CreatePost onPostCreated={handlePostCreated} />}
       {posts.map((post) => (
-        <div key={post.id}>
-          <p>{post.content}</p>
-          <p>Likes: {post.likeCount}</p> {/* Update likeCount */}
-          <p>Comments: {post.commentCount}</p> {/* Update commentCount */}
-        </div>
+        <Post key={post.id} post={post} onUpdate={fetchUserAndPosts} />
       ))}
     </div>
   );
