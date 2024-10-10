@@ -20,6 +20,7 @@ model User {
   posts     Post[]
   followers User[]   @relation("UserFollows")
   following User[]   @relation("UserFollows")
+  likes     Like[]
 }
 
 model Post {
@@ -29,4 +30,16 @@ model Post {
   author    User     @relation(fields: [authorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  likes     Like[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
 }
