@@ -2,10 +2,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
+import Home from "./pages/Home"; // Import the new Home component
 import { AuthProvider } from "./context/AuthContext";
 
 // Placeholder components
-const Home = () => <h1>Home</h1>;
 const Profile = () => <h1>Profile</h1>;
 
 function App() {
@@ -14,7 +14,8 @@ function App() {
       <Router>
         <Layout>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<Home />} />{" "}
+            {/* Use the Home component here */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />

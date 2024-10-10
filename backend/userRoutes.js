@@ -10,14 +10,14 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key";
 
 router.post("/register", async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, username } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-        name,
+        name: username,
       },
     });
 
@@ -25,6 +25,7 @@ router.post("/register", async (req, res) => {
       .status(201)
       .json({ message: "User created successfully", userId: user.id });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: "Error creating user" });
   }
 });

@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const userRoutes = require("./userRoutes");
 const protectedRoutes = require("./protectedRoutes");
 const postRoutes = require("./postRoutes");
@@ -6,6 +7,12 @@ const followRoutes = require("./followRoutes");
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Adjust this to match the origin of your frontend
+  })
+);
 
 app.use(express.json());
 
